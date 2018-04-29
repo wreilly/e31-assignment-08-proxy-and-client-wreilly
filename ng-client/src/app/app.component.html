@@ -22,7 +22,7 @@
     <h2>Angular Client and Express Proxy Server</h2>
 <div>Used to reach LibraryThing.com Web Service that has <strong><span style="font-size: large;">No <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">CORS</a> Allowed</span></strong>:</div>
 
-<h4>Response Processing:</h4>
+<h4>Notes on Processing the XML (as String) Response:</h4>
     <ul>
         <li>1). LibraryThing Web Services API returns XML as String (to my Proxy Server).</li>
         <li>2). Proxy Server returns XML String to Angular Client, which uses Browser's window.DOMParser to create XML Document from String;</li>
@@ -82,7 +82,7 @@
       <br />
       <div  style="background-color: lightblue; padding: 8px;">
         <label for="bookId_id">LibraryThing Book ID # : </label>
-        <input type="text" ref-bookId id="bookId_id" name="bookId_name" placeholder="e.g. 1528" />
+        <input type="text" ref-bookId id="bookId_id" name="bookId_name" on-keyup.enter="getLtWsApi(bookId)" placeholder="e.g. 1528" />
         <br />
         <button type="submit" on-click="getLtWsApi(bookId)">Indicate Book ID# to Retrieve</button>
         <ul>

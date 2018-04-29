@@ -65,6 +65,12 @@ this Express proxy server app.
  */
 
 const client_dist_dir = path.join(__dirname, '..', '..', 'ng-client', 'dist');
+
+console.log('SERVER.JS client_dist_dir is ', client_dist_dir)
+/* Looks to be okay:
+ SERVER.JS client_dist_dir is  /Users/william.reilly/dev/JavaScript/CSCI-E31/Assignments/08-graduate-assignment-proxy-server/ng-client/dist
+ */
+
 // '../../ng-client/dist'
 /* N.B.
 With new "combo" proxy + client Git repository,
@@ -74,7 +80,14 @@ to get over and then down to the
 Angular Client /ng-client/dist directory.
 Will that work ???
  */
+/*
 app.use('/', express.static(client_dist_dir))
+
+*/
+/*
+app.use('/', express.static('../../ng-client/dist'))
+*/
+app.use('/', express.static('./dist'))
 
 
 var server = http.createServer(app);
