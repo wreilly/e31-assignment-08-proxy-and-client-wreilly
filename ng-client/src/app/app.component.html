@@ -20,27 +20,16 @@
     <div><a href="https://canvas.harvard.edu/courses/35096" target="_blank">CSCI-E31</a> Assignment 8 (Graduate Credit Extra Work)</div>
 </div>
     <h2>Angular Client and Express Proxy Server</h2>
-<div>Used to reach LibraryThing.com Web Service that has <strong><span style="font-size: large;">No <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">CORS</a> Allowed</span></strong>:</div>
+<div>Proxy Server technique used to reach a Web Service from LibraryThing.com that has <strong><span style="font-size: large;">No <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS" target="_blank">CORS</a> Allowed</span></strong></div>
 
-<h4>Notes on Processing the XML (as String) Response:</h4>
-    <ul>
-        <li>1). LibraryThing Web Services API returns XML as String (to my Proxy Server).</li>
-        <li>2). Proxy Server returns XML String to Angular Client, which uses Browser's window.DOMParser to create XML Document from String;</li>
-        <ul>
-            <li>Inject 'window' as Angular Service, to access DOMParser</li>
-        </ul>
-        <li>3). Angular Client integrates with 3rd party JavaScript: 'parse.js' (which in turn has dependency on Lodash), to create JavaScript object from XML Document, parts of which finally are displayed to Client app webpage. Done.</li>
-        <ul>
-            <li>parse.js: 2 steps: 1) Convert to parse.ts.; 2) export functions for import into Angular components</li>
-            <li>Lodash: 3 steps: 1) npm install lodash; 2) npm install @types/lodash; 3) import * as _ from 'lodash'</li>
-        </ul>
-    </ul>
+<h3>PLEASE SEE README.md: <a href="https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md" target="_blank">https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md</a></h3>
+
     <hr />
 
 
 <div class="row">
   <h3>0. FakeAPI</h3>
-    <p>Just for contrast: Straightforward HTTP service.</p>
+    <p><em>Just for contrast to the more complex Proxy Server for LibraryThing: here is a straightforward HTTP service.</em></p>
   <h4>Get 100 FakeAPI "Lorem Ipsum" Entries</h4>
   <div style="font-size: x-small;">1. HTTP REQ: https://jsonplaceholder.typicode.com/posts</div>
   <ul>
@@ -76,8 +65,8 @@
       <!-- Use "{{ '{' }}") to escape it. -->
       <div style="font-size: x-small;">2. HTTP REQ: http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=${{'{'}}book_id_passed{{'}'}}&apikey=59211e...</div>
       <ul>
-        <li>"No CORS Allowed" problem, and so does make use of Proxy Server.</li>
-        <li>Uses my "LibraryThingService", for HTTP request first to the Proxy Server (hence from Proxy Server to LibraryThing).</li>
+        <li>This LibraryThing Web Service has the "No CORS Allowed" problem, and so this solution makes use of a Proxy Server.</li>
+        <li>Uses my Angular app "LibraryThingService", for HTTP request first to the Proxy Server (hence from Proxy Server to LibraryThing).</li>
       </ul>
       <br />
       <div  style="background-color: lightblue; padding: 8px;">
@@ -103,6 +92,9 @@
         <li *ngFor="let cName of myCharacterNames">{{ cName }}</li>
       </ol>
 </div>
+
+<h3>PLEASE SEE README.md: <a href="https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md" target="_blank">https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md</a></h3>
+
 
 <div class="center">
     <hr />

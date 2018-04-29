@@ -126,11 +126,13 @@ server.listen(3000); // , '0.0.0.0');
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 // GET '/'
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+/* 20180429 - SEE THE CATCH-ALL '/*' AT BOTTOM OF FILE
 app.get('/', function (req, res) {
 	// DEPRECATED: 
 	// res.sendfile(__dirname + '/index.html');
 	   res.sendFile(__dirname + '/index.html');
     });
+*/
 
 // $$$$$$$ LIBRARY THING WS API (1) XML BOOK_ID (2) API-KEY "BAKED IN" $$$$$
 // GET '/myspecialproxy/:book_id'
@@ -292,5 +294,5 @@ And you (quite properly) get:
 Good!
 */
 app.use('/*', (req, res, next) => {
-    res.sendFile('index.html', {root: client_dist_dir})
+    res.sendFile('index.html', {root: client_dist_dir_done_right})
 })
