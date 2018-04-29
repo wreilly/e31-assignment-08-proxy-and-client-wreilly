@@ -1,7 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# compiled output - For CSCI-E31 Assignment 8 (And 7) need to NOT exclude /dist
-# /dist
+# compiled output
+# /ng-client is for Assignment 8...
+/dist
 /dist-server
 /tmp
 /out-tsc

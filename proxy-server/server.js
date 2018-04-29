@@ -64,8 +64,16 @@ this Express proxy server app.
 
  */
 
-const client_dist_dir = path.join(__dirname, '.', 'client', 'dist');
-// './client/dist'
+const client_dist_dir = path.join(__dirname, '..', '..', 'ng-client', 'dist');
+// '../../ng-client/dist'
+/* N.B.
+With new "combo" proxy + client Git repository,
+this path now goes UP and OUT of
+the Express /proxy-server directory,
+to get over and then down to the
+Angular Client /ng-client/dist directory.
+Will that work ???
+ */
 app.use('/', express.static(client_dist_dir))
 
 
