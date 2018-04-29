@@ -66,7 +66,17 @@ this Express proxy server app.
 
 const client_dist_dir = path.join(__dirname, '..', '..', 'ng-client', 'dist');
 
+/*
+Am I kind of an idiot?
+ */
+const client_dist_dir_done_right = path.join(__dirname, '..', 'ng-client', 'dist');
+
+const copied_here_client_dist_dir = path.join(__dirname, '.', 'dist');
+
+
 console.log('SERVER.JS client_dist_dir is ', client_dist_dir)
+console.log('SERVER.JS copied_here_client_dist_dir is ', copied_here_client_dist_dir)
+
 /* Looks to be okay:
  SERVER.JS client_dist_dir is  /Users/william.reilly/dev/JavaScript/CSCI-E31/Assignments/08-graduate-assignment-proxy-server/ng-client/dist
  */
@@ -78,16 +88,30 @@ this path now goes UP and OUT of
 the Express /proxy-server directory,
 to get over and then down to the
 Angular Client /ng-client/dist directory.
-Will that work ???
+Q. Will that work ???
+A. Hmm.
+Video 13.8 at ~07:48 seems to say it should!
+ https://canvas.harvard.edu/courses/35096/pages/week-13-build-and-deploy?module_item_id=378294
+ app.use('/', express.static('../client/dist'));
+Hmm.
+Hmm...
  */
 /*
+ // DON'T WORK. (idiot!)
 app.use('/', express.static(client_dist_dir))
+*/
 
-*/
-/*
-app.use('/', express.static('../../ng-client/dist'))
-*/
-app.use('/', express.static('./dist'))
+// YES. Finally. sigh
+app.use('/', express.static(client_dist_dir_done_right))
+
+// DON'T WORK. (idiot!)
+// app.use('/', express.static('../../ng-client/dist'))
+
+// WORKS. But we are not going to do it this way.
+// app.use('/', express.static('./dist'))
+
+// WORKS! But we are not going to do it this way.
+// app.use('/', express.static(copied_here_client_dist_dir))
 
 
 var server = http.createServer(app);
