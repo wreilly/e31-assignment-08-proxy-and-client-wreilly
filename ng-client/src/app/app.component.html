@@ -71,8 +71,8 @@
     </div>
   <div class="row">
 
-      <div style="font-size: x-small;">1. PROXY: http://0.0.0.0:3000/myspecialproxy/:book_id</div>
-
+      <!-- e.g. 'http://104.236.198.117:3000/' -->
+      <div style="font-size: x-small;">1. PROXY pointing to: {{ apiUrlStubInApp }} myspecialproxy/:book_id</div>
       <!-- Use "{{ '{' }}") to escape it. -->
       <div style="font-size: x-small;">2. HTTP REQ: http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=${{'{'}}book_id_passed{{'}'}}&apikey=59211e...</div>
       <ul>

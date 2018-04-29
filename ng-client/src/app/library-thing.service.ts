@@ -56,6 +56,7 @@ SAMPLE URL:
  */
 
     apiUrlStubInService = environment.apiUrlStubInEnvironment;
+    // e.g. 'http://104.236.198.117:3000/'
 
     constructor(private _myHttpService: HttpClient) {  }
 

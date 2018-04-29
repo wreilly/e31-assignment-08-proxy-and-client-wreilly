@@ -4,6 +4,12 @@ import { LibraryThingService } from './library-thing.service';
 // https://juristr.com/blog/2016/09/ng2-get-window-ref/
 import { WindowRefService } from './WindowRefService';
 
+// Only bringing in this Environment property so we can display it to the U/I (testing/dev purposes)
+// No need to specify which environment file (e.g. "prod")
+import { environment } from '../environments/environment';
+
+
+
 import { lilInspector } from '../utils/lilInspector';
 import { flatten, parse } from '../utils/parse';
 
@@ -22,6 +28,8 @@ export class AppComponent {
   myRating;
   myLtUrl;
   myCharacterNames = [];
+  apiUrlStubInApp = environment.apiUrlStubInEnvironment;
+  // e.g. 'http://104.236.198.117:3000/'
 
 
   constructor(private _myLibraryThingService: LibraryThingService, private _myWindowRefService: WindowRefService) {  }
