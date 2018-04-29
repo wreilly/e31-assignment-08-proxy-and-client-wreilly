@@ -1,0 +1,9 @@
+/* You can add global styles to this file, and also import other style files */div.div-click{cursor:pointer;color:blue}body{padding:50px;font:14px Lucida Grande,Helvetica,Arial,sans-serif}.center{text-align:center}
+
+/*
+https://www.w3schools.com/howto/howto_css_two_columns.asp
+ */*{-webkit-box-sizing:border-box;box-sizing:border-box}.column{float:left;padding:10px}.left{width:70%}
+
+/*background-color: lightgreen;*/.left,.right{background-color:inherit}.right{width:30%}
+
+/*background-color: gainsboro;*/.row:after{content:"";display:table;clear:both}

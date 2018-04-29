@@ -1,0 +1,52 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>AssignmentGraduateNoCorsProxyServerWreilly</title><base href="/"><!-- Lodash a dependency for this XML parse.js
+  https://andrew.stwrt.ca/posts/js-xml-parsing/
+  --><!-- No longer used. We now have done npm install lodash
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
+--><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/x-icon" href="favicon.ico"><link href="styles.06d3af02001bcb69c1a3.bundle.css" rel="stylesheet"/></head><body><app-root></app-root><!--
+
+Notes: 2018-04-26 Thursday session w. Artie
+
+Code for the app.js in the Express app.
+The one I have yet to create.
+It will be created from Assignment 5 (REST API).
+It will be "amalgamated" right into same Git repository as the Angular client app.
+============
+/overall-two-part-app <<<< Git repo root. Assignment # 7.
+  /.git
+  /.gitignore
+  /client
+     /dist
+     /src
+       /app/app.component.ts etc...
+       /index.html
+     /package.json
+  /server
+     /bin/www
+     /controllers
+       /api
+     /routes
+       /api
+     /public
+       /javascript
+     /views
+     /app.js <<<<< file we're talking about
+     /package.json
+==============
+
+-----------------------------
+Catch-All:
+- That last "wildcard" (*) line helps ensure that a "user page refresh" doesn't mistakenly invoke URL that the Express server cannot find or handle.
+- Note that this is not a truly robust "404" handling, but, it's good enough, and represents an Improvement. ("Ta-da")
+---------
+app.js in Express!
+---------
+const client_dist_dir = path.join(__dirname, '..', 'client', 'dist')
+app.use('/', express.static(client_dist_dir))
+app.use('/static', express.static(path.join(__dirname, 'public')))
+app.use('/api', apiRouter)
+app.use('/*', (req, res, next) => {
+  res.sendFile('index.html', {root: client_dist_dir})
+})
+
+
+--><script type="text/javascript" src="inline.a745597c080518a0c78b.bundle.js"></script><script type="text/javascript" src="polyfills.46af3f84a403e219371b.bundle.js"></script><script type="text/javascript" src="main.4f5e4a8e0e2b21bce509.bundle.js"></script></body></html>
