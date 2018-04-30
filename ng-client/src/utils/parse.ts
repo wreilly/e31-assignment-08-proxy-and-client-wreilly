@@ -23,7 +23,8 @@ import * as _ from 'lodash'; // '../../node_modules/lodash'; // << Did not work
 
 // flattens an object (recursively!), similarly to Array#flatten
 // e.g. flatten({ a: { b: { c: "hello!" } } }); // => "hello!"
-export const flatten = function (object) {
+// (Note: No need to export this internal function.)
+const flatten = function (object) {
     let check = _.isPlainObject(object) && _.size(object) === 1;
     return check ? flatten(_.values(object)[0]) : object;
 }

@@ -76,7 +76,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\" style=\"background-color: cornflowerblue\">\n    <div class=\"column left\">\n        <div style=\"text-align:center\">\n            <h1>\n                {{ title }}\n            </h1>\n        </div>\n    </div>\n    <div class=\"column right\">\n        <img src=\"https://www.librarything.com/pics/piles/downpile/18.jpg\" style=\"max-height: 100px\" alt=\"\">\n    </div>\n</div>\n    <div class=\"row\">\n    <div style=\"text-align:center\">\n        <a href=\"https://www.librarything.com/services/rest/documentation/1.1/\" target=\"_blank\">LibraryThing's API Documentation</a> | <a\n        href=\"https://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=d231aa37c9b4f5d304a60a3d0ad1dad4\" target=\"_blank\">LibraryThing's Sample XML Response</a>\n</div>\n\n    <hr />\n    <div><a href=\"https://canvas.harvard.edu/courses/35096\" target=\"_blank\">CSCI-E31</a> Assignment 8 (Graduate Credit Extra Work)</div>\n</div>\n    <h2>Angular Client and Express Proxy Server</h2>\n<div>Proxy Server technique used to reach a Web Service from LibraryThing.com that has <strong><span style=\"font-size: large;\">No <a href=\"https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS\" target=\"_blank\">CORS</a> Allowed</span></strong></div>\n\n<h3>PLEASE SEE README.md: <a href=\"https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md\" target=\"_blank\">https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md</a></h3>\n\n    <hr />\n\n\n<div class=\"row\">\n  <h3>0. FakeAPI</h3>\n    <p><em>Just for contrast to the more complex Proxy Server for LibraryThing: here is a straightforward HTTP service.</em></p>\n  <h4>Get 100 FakeAPI \"Lorem Ipsum\" Entries</h4>\n  <div style=\"font-size: x-small;\">1. HTTP REQ: https://jsonplaceholder.typicode.com/posts</div>\n  <ul>\n    <li>This API <em>does</em> allow CORS; there is no need for a Proxy Server.</li>\n    <li>(Note: In the Angular Client app, I for convenience did put the HTTP request direct to FakeAPI.com inside of my \"LibraryThingService\".)</li>\n</ul>\n  <button type=\"submit\" (click)=\"getFakeAPI($event)\">Display FakeAPI Entries</button>\n  <br />\n  <br />\n<button type=\"submit\" on-click=\"clearFakeAPI()\"><em>(Clear FakeAPI Entries)</em></button>\n  <hr />\n  <ol>\n  <li *ngFor=\"let fapi of fakeApiStuff\">\n    {{ fapi.title }}\n  </li>\n</ol>\n</div>\n<div class=\"row\" style=\"background-color: yellowgreen\">\n        <div class=\"column left\">\n            <h3>1. LibraryThing - Web Services API</h3>\n        </div>\n        <div class=\"column right\" style=\"align-content: center\">\n            <!--\n                <a href=\"http://www.librarything.com/\" target=\"_blank\"><img src=\"https://www.librarything.com/pics/piles/downpile/18.jpg\" style=\"max-height: 100px\" alt=\"\"></a>\n            -->\n            <img src=\"http://pics.cdn.librarything.com/picsizes/24/bd/24bd271ed51344f5979696a5551434f414f4141.jpg\"  style=\"max-height: 100px\" alt=\"\">\n        </div>\n    </div>\n  <div class=\"row\">\n\n      <!-- e.g. 'http://104.236.198.117:3000/' -->\n      <div style=\"font-size: x-small;\">1. PROXY pointing to: {{ apiUrlStubInApp }} myspecialproxy/:book_id</div>\n      <!-- Use \"{{ '{' }}\") to escape it. -->\n      <div style=\"font-size: x-small;\">2. HTTP REQ: http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=${{'{'}}book_id_passed{{'}'}}&apikey=59211e...</div>\n      <ul>\n        <li>This LibraryThing Web Service has the \"No CORS Allowed\" problem, and so this solution makes use of a Proxy Server.</li>\n        <li>Uses my Angular app \"LibraryThingService\", for HTTP request first to the Proxy Server (hence from Proxy Server to LibraryThing).</li>\n      </ul>\n      <br />\n      <div  style=\"background-color: lightblue; padding: 8px;\">\n        <label for=\"bookId_id\">LibraryThing Book ID # : </label>\n        <input type=\"text\" ref-bookId id=\"bookId_id\" name=\"bookId_name\" on-keyup.enter=\"getLtWsApi(bookId)\" placeholder=\"e.g. 1528\" />\n        <br />\n        <button type=\"submit\" on-click=\"getLtWsApi(bookId)\">Indicate Book ID# to Retrieve</button>\n        <ul>\n          <li>1528 = The Red Badge of Courage</li>\n          <li>1527 = The Picture of Dorian Gray</li>\n          <li>1526 = The Odyssey</li>\n          <li>1525 = The Name of the Rose</li>\n        </ul>\n      </div>\n      <ul>\n        <li>Author: {{ myAuthor }}</li>\n        <li>Title: {{ myTitle }}</li>\n        <li>Rating: {{ myRating }}</li>\n        <li>LibraryThing URL: <a href=\"{{myLtUrl}}\" target=\"_blank\">{{ myLtUrl }}</a></li>\n      </ul>\n      <!--   <h5 *ngIf=\"{{ myCharacterNames }}\">Character Names</h5> -->\n      <ol>\n        <li *ngFor=\"let cName of myCharacterNames\">{{ cName }}</li>\n      </ol>\n</div>\n\n<h3>PLEASE SEE README.md: <a href=\"https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md\" target=\"_blank\">https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md</a></h3>\n\n\n<div class=\"center\">\n    <hr />\n    <div>(c) Some Times Accesses LibraryThing, & Beyond 2018</div>\n    <div>William Reilly - wreilly2001@gmail.com</div>\n    <div>CSCI-E31 Assignment 8 (Graduate Credit Extra Work) - April 30, 2018</div>\n    <hr />\n</div>\n"
+module.exports = "<div class=\"row\" style=\"background-color: #e4e5c0\">\n    <div class=\"column left\">\n        <div style=\"text-align:center\">\n            <h1>\n                {{ title }}\n            </h1>\n        </div>\n    </div>\n    <div class=\"column right\">\n        <img src=\"https://www.librarything.com/pics/piles/downpile/18.jpg\" style=\"max-height: 100px\" alt=\"\">\n    </div>\n</div>\n    <div class=\"row\">\n    <div style=\"text-align:center\">\n        <a href=\"https://www.librarything.com/services/rest/documentation/1.1/\" target=\"_blank\">LibraryThing's API Documentation</a> | <a\n        href=\"https://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=d231aa37c9b4f5d304a60a3d0ad1dad4\" target=\"_blank\">LibraryThing's Sample XML Response</a>\n</div>\n\n    <hr />\n    <div><a href=\"https://canvas.harvard.edu/courses/35096\" target=\"_blank\">CSCI-E31</a> Assignment 8 (Graduate Credit Extra Work)</div>\n</div>\n    <h2>Angular Client and Express Proxy Server</h2>\n<div>Proxy Server technique used to reach a Web Service from LibraryThing.com that has <strong><span style=\"font-size: large;\">No <a href=\"https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS\" target=\"_blank\">CORS</a> Allowed</span></strong></div>\n\n<h3>PLEASE SEE README.md: <a href=\"https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md\" target=\"_blank\">https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md</a></h3>\n\n    <hr />\n\n\n<div class=\"row\">\n  <h3>0. FakeAPI</h3>\n    <p><em>Just for contrast to the more complex Proxy Server for LibraryThing: here is a straightforward HTTP service.</em></p>\n  <h4>Get 100 FakeAPI \"Lorem Ipsum\" Entries</h4>\n  <div style=\"font-size: x-small;\">1. HTTP REQ: https://jsonplaceholder.typicode.com/posts</div>\n  <ul>\n    <li>This API <em>does</em> allow CORS; there is no need for a Proxy Server.</li>\n    <li>(Note: In the Angular Client app, I for convenience did put the HTTP request direct to FakeAPI.com inside of my \"LibraryThingService\".)</li>\n</ul>\n  <button type=\"submit\" (click)=\"getFakeAPI($event)\">Display FakeAPI Entries</button>\n  <br />\n  <br />\n<button type=\"submit\" on-click=\"clearFakeAPI()\"><em>(Clear FakeAPI Entries)</em></button>\n  <hr />\n  <ol>\n  <li *ngFor=\"let fapi of fakeApiStuff\">\n    {{ fapi.title }}\n  </li>\n</ol>\n</div>\n<div class=\"row\" style=\"background-color: #bdd8ba\">\n        <div class=\"column left\">\n            <h3>1. LibraryThing - Web Services API</h3>\n        </div>\n        <div class=\"column right\" style=\"align-content: center\">\n            <!--\n                <a href=\"http://www.librarything.com/\" target=\"_blank\"><img src=\"https://www.librarything.com/pics/piles/downpile/18.jpg\" style=\"max-height: 100px\" alt=\"\"></a>\n            -->\n            <img src=\"http://pics.cdn.librarything.com/picsizes/24/bd/24bd271ed51344f5979696a5551434f414f4141.jpg\"  style=\"max-height: 100px\" alt=\"\">\n        </div>\n    </div>\n  <div class=\"row\">\n\n      <!-- e.g. 'http://104.236.198.117:3000/' -->\n      <div style=\"font-size: x-small;\">1. PROXY pointing to: {{ apiUrlStubInApp }} myspecialproxy/:book_id</div>\n      <!-- Use \"{{ '{' }}\") to escape it. -->\n      <div style=\"font-size: x-small;\">2. HTTP REQ: http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=${{'{'}}book_id_passed{{'}'}}&apikey=59211e...</div>\n      <ul>\n        <li>This LibraryThing Web Service has the \"No CORS Allowed\" problem, and so this solution makes use of a Proxy Server.</li>\n        <li>Uses my Angular app \"LibraryThingService\", for HTTP request first to the Proxy Server (hence from Proxy Server to LibraryThing).</li>\n      </ul>\n      <br />\n      <div  style=\"background-color: #c8d3f4; padding: 15px;\">\n        <label for=\"bookId_id\">LibraryThing Book ID # : </label>\n        <input type=\"text\" ref-bookId id=\"bookId_id\" name=\"bookId_name\" on-keydown.enter=\"getLtWsApi($event)\" placeholder=\"e.g. 1528\" />\n        <br />\n        <button type=\"submit\" on-click=\"getLtWsApi(bookId)\">Indicate Book ID# to Retrieve</button>\n        <ul>\n          <li>1528 = The Red Badge of Courage</li>\n          <li>1527 = The Picture of Dorian Gray</li>\n          <li>1526 = The Odyssey</li>\n          <li>1525 = The Name of the Rose</li>\n        </ul>\n      </div>\n      <ul>\n        <li>Author: {{ myAuthor }}</li>\n        <li>Title: {{ myTitle }}</li>\n        <li>Rating: {{ myRating }}</li>\n        <li>LibraryThing URL: <a href=\"{{myLtUrl}}\" target=\"_blank\">{{ myLtUrl }}</a></li>\n      </ul>\n      <h5 *ngIf=\"myCharacterNames.length\">Character Names</h5>\n      <ol>\n        <li *ngFor=\"let cName of myCharacterNames\">{{ cName }}</li>\n      </ol>\n</div>\n\n<h3>PLEASE SEE README.md: <a href=\"https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md\" target=\"_blank\">https://github.com/wreilly/e31-assignment-08-proxy-and-client-wreilly/blob/master/README.md</a></h3>\n\n\n<div class=\"center\">\n    <hr />\n    <div>(c) Some Times Accesses LibraryThing, & Beyond 2018</div>\n    <div>William Reilly - wreilly2001@gmail.com</div>\n    <div>CSCI-E31 Assignment 8 (Graduate Credit Extra Work) - April 30, 2018</div>\n    <hr />\n</div>\n"
 
 /***/ }),
 
@@ -142,14 +142,27 @@ var AppComponent = /** @class */ (function () {
     /* ***** LIBRARYTHING - WEB SERVICES (XML) API ******* */
     /* ******************************* */
     AppComponent.prototype.getLtWsApi = function (inputElementRefPassedIn) {
-        // console.log('LtWsApi eventPassedIn ', eventPassedIn);
+        var _this = this;
+        console.log('*** LtWsApi inputElementRefPassedIn ', inputElementRefPassedIn);
         // const book_id_hardcoded = '1528'; // Red Badge of Courage
         // const book_id: string = inputElementRefPassedIn.value;
-        var _this = this;
         var book_id = '';
-        // If user just clicks Submit (no entry to input box),
-        // we'll run default book 1528 (Red Badge of Courage)
-        inputElementRefPassedIn.value ? book_id = inputElementRefPassedIn.value : book_id = '1528';
+        /*
+        The Enter Key sends Keyboard Event, which has what we want in: $event.target.value
+        The Submit Button sends InputElement, which has what we want in: .value
+         */
+        // Useless. Both are simply 'object'
+        //      console.log('typeof inputElementRefPassedIn: ', typeof inputElementRefPassedIn);
+        if (inputElementRefPassedIn.target) {
+            console.log('inputElementRefPassedIn.target: ', inputElementRefPassedIn.target);
+            console.log('inputElementRefPassedIn.target.value: ', inputElementRefPassedIn.target.value);
+            inputElementRefPassedIn.target.value ? book_id = inputElementRefPassedIn.target.value : book_id = '1528';
+        }
+        else {
+            // If user just clicks Submit (no entry to input box),
+            // we'll run default book 1528 (Red Badge of Courage)
+            inputElementRefPassedIn.value ? book_id = inputElementRefPassedIn.value : book_id = '1528';
+        }
         // Reset display of data
         this.myAuthor = '';
         this.myTitle = '';
@@ -217,7 +230,7 @@ var AppComponent = /** @class */ (function () {
             */
             var myParsedGroovyXmlDocument = Object(__WEBPACK_IMPORTED_MODULE_5__utils_parse__["a" /* parse */])(myGroovyXmlDocument);
             Object(__WEBPACK_IMPORTED_MODULE_4__utils_lilInspector__["a" /* lilInspector */])(myParsedGroovyXmlDocument, '');
-            console.log(myParsedGroovyXmlDocument, '');
+            console.log('myParsedGroovyXmlDocument ', myParsedGroovyXmlDocument);
             // https://stackoverflow.com/questions/17604071/parse-xml-using-javascript
             // https://gist.github.com/jashmenn/b306add36d3e6f0f6483 Javascript var self = this; vs. .bind
             /* Some Hard-Coded Values (for Testing)
@@ -246,8 +259,25 @@ var AppComponent = /** @class */ (function () {
             }
             function getCommonFour(thingAsThis) {
                 var that = thingAsThis; // "this equals that"
-                that.myAuthor = myGroovyXmlDocument.getElementsByTagName('author')[0].childNodes[0].nodeValue;
-                that.myTitle = myGroovyXmlDocument.getElementsByTagName('title')[0].childNodes[0].nodeValue;
+                // Discovered (trial & error) that book_id 88, for example, has NO AUTHOR
+                var ifThereIsAnAuthor = myGroovyXmlDocument.getElementsByTagName('author');
+                console.log('ifThereIsAnAuthor typeof HTMLCollection[] array ? ', typeof ifThereIsAnAuthor);
+                /*
+                HTMLCollection[]
+                 https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array
+                 */
+                if (ifThereIsAnAuthor.length > 0) {
+                    that.myAuthor = myGroovyXmlDocument.getElementsByTagName('author')[0].childNodes[0].nodeValue;
+                }
+                // Agh. Book_ID 1257 has NO TITLE.
+                /*
+                 http://www.librarything.com/work/1257 = "No title"  O la. Empty record. How (in the world) did I hit upon this one?
+                 */
+                var ifThereIsATitle = myGroovyXmlDocument.getElementsByTagName('title');
+                if (ifThereIsATitle.length > 0) {
+                    that.myTitle = myGroovyXmlDocument.getElementsByTagName('title')[0].childNodes[0].nodeValue;
+                }
+                // Going on assumption these 2 fields are ALWAYS there. (Might be wrong.)
                 that.myRating = myGroovyXmlDocument.getElementsByTagName('rating')[0].childNodes[0].nodeValue;
                 that.myLtUrl = myGroovyXmlDocument.getElementsByTagName('url')[0].childNodes[0].nodeValue;
             }
@@ -338,21 +368,20 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 // No need to specify which environment file (e.g. "prod")
 
 var LibraryThingService = /** @class */ (function () {
-    // e.g. 'http://104.236.198.117:3000/'
+    // e.g. 'http://104.236.198.117:3000/', -OR- 'http://0.0.0.0:3000/'
     function LibraryThingService(_myHttpService) {
         this._myHttpService = _myHttpService;
         /*
-        Service to reach REST Services
-        from LibraryThing.com (LT)
-        for two purposes:
+        Angular Service to use HTTP to reach 3rd party REST Services
+        E.g. from LibraryThing.com (LT), where there are in fact two APIs:
         
-        1) "LT Web Services API"
+        1) "LT Web Services API"   << This IS Implemented Herein
            - No CORS support
            - JSONP can *not* be used...
            -- ...because it *returns XML*
            - Therefore requires Proxy Server
         
-        2) "LT JavaScript API"
+        2) "LT JavaScript API"    << NOT YET Implemented Herein
            - No CORS support
            - JSONP can be used
            -- (Therefore does *not* require proxy server)
@@ -394,44 +423,32 @@ var LibraryThingService = /** @class */ (function () {
     /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
     /* ^^^^^^   TOC   ^^^^^^^^^^^^^  */
     /*
-    
     get100FakeAPI()  (just demonstration purpose)
-    
+
     getLibraryThingCK(book_id)
-    
-    getLibraryThingMyBooks(user_id)
-    
+
+    getLibraryThingMyBooks(user_id) << NOT YET Implemented Herein
     */
+    /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
     LibraryThingService.prototype.get100FakeAPI = function () {
+        /* FakeAPI.com
+        Just put here for comparison purpose. Simpler API call, no "CORS" issues.
+         */
         // "100" is the default return for "get ALL" from this free, open, "fake" API.
-        /* YER WRONG: No. Do not just "return" this asynchronous call like so: */
-        // Yes we DO "just return" from here.
         return this._myHttpService.get('https://jsonplaceholder.typicode.com/posts');
-        /* WRONG: Hmm.    Must handle with XXPromise!XX XXObservable!!XX */
-        /* NO. Here, Angular HttpClient thing GENERATES an Observable.
+        /* Note: Here, Angular HttpClient GENERATES an Observable.
                In the calling app.component.ts, we SUBSCRIBE to that Observable.
-               Cheers.
-        
-              this._myHttpService.get('https://jsonplaceholder.typicode.com/posts')
-                  .subscribe(
-                      (whatIGot) => {
-                          return whatIGot;
-                      }
-                  )
         */
     };
     LibraryThingService.prototype.getLibraryThingCK = function (book_id) {
         // "CK" = Common Knowledge, a LibraryThing.com feature.
         console.log('here we are in LT SERVICE & Etc. book_id is ', book_id);
         return this._myHttpService.get(this.apiUrlStubInService + "myspecialproxy/" + book_id);
-        /* WORKS !
-              return this._myHttpService.get(`http://0.0.0.0:3000/myspecialproxy/${book_id}`);
-        */
         /* E.g., Proxy Server in turn sends to:
          http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=59211e...
          */
         /* CORS ERROR:
-         If you try to visit this address from BROWSER.
+         If you try to visit this address directly from a Client App in the  BROWSER.
          Needs PROXY SERVER instead.
   
          Failed to load http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&apikey=59211e...&id=1060:
@@ -535,7 +552,6 @@ var lilInspector = function (yourObject, yourObjectVariableName_kids) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony export flatten */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return parse; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash__ = __webpack_require__("../../../../lodash/lodash.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_lodash___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_lodash__);
@@ -560,6 +576,7 @@ https://medium.com/@armno/til-importing-lodash-into-angular-the-better-way-aacbe
  // '../../node_modules/lodash'; // << Did not work
 // flattens an object (recursively!), similarly to Array#flatten
 // e.g. flatten({ a: { b: { c: "hello!" } } }); // => "hello!"
+// (Note: No need to export this internal function.)
 var flatten = function (object) {
     var check = __WEBPACK_IMPORTED_MODULE_0_lodash__["isPlainObject"](object) && __WEBPACK_IMPORTED_MODULE_0_lodash__["size"](object) === 1;
     return check ? flatten(__WEBPACK_IMPORTED_MODULE_0_lodash__["values"](object)[0]) : object;

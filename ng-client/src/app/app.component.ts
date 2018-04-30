@@ -11,7 +11,7 @@ import { environment } from '../environments/environment';
 
 
 import { lilInspector } from '../utils/lilInspector';
-import { flatten, parse } from '../utils/parse';
+import { parse } from '../utils/parse';
 
 @Component({
   selector: 'app-root',
@@ -63,15 +63,29 @@ export class AppComponent {
   /* ***** LIBRARYTHING - WEB SERVICES (XML) API ******* */
   /* ******************************* */
   getLtWsApi(inputElementRefPassedIn) {
-    // console.log('LtWsApi eventPassedIn ', eventPassedIn);
+    console.log('*** LtWsApi inputElementRefPassedIn ', inputElementRefPassedIn);
     // const book_id_hardcoded = '1528'; // Red Badge of Courage
     // const book_id: string = inputElementRefPassedIn.value;
 
     let book_id = '';
 
-    // If user just clicks Submit (no entry to input box),
-      // we'll run default book 1528 (Red Badge of Courage)
-    inputElementRefPassedIn.value ? book_id = inputElementRefPassedIn.value : book_id = '1528';
+    /*
+    The Enter Key sends Keyboard Event, which has what we want in: $event.target.value
+    The Submit Button sends InputElement, which has what we want in: .value
+     */
+    // Useless. Both are simply 'object'
+//      console.log('typeof inputElementRefPassedIn: ', typeof inputElementRefPassedIn);
+
+    if(inputElementRefPassedIn.target) {
+        console.log('inputElementRefPassedIn.target: ', inputElementRefPassedIn.target);
+        console.log('inputElementRefPassedIn.target.value: ', inputElementRefPassedIn.target.value);
+        inputElementRefPassedIn.target.value ? book_id = inputElementRefPassedIn.target.value : book_id = '1528';
+    } else {
+        // If user just clicks Submit (no entry to input box),
+        // we'll run default book 1528 (Red Badge of Courage)
+        inputElementRefPassedIn.value ? book_id = inputElementRefPassedIn.value : book_id = '1528';
+    }
+
 
 
     // Reset display of data
@@ -149,7 +163,7 @@ parse.js --> parse.ts
            */
           const myParsedGroovyXmlDocument =   parse(myGroovyXmlDocument);
           lilInspector(myParsedGroovyXmlDocument, '');
-          console.log(myParsedGroovyXmlDocument, '');
+          console.log('myParsedGroovyXmlDocument ', myParsedGroovyXmlDocument);
 
 // https://stackoverflow.com/questions/17604071/parse-xml-using-javascript
 // https://gist.github.com/jashmenn/b306add36d3e6f0f6483 Javascript var self = this; vs. .bind
@@ -184,8 +198,28 @@ re: CharacterNames
 
           function getCommonFour(thingAsThis) {
             const that = thingAsThis; // "this equals that"
-            that.myAuthor = myGroovyXmlDocument.getElementsByTagName('author')[0].childNodes[0].nodeValue;
-            that.myTitle = myGroovyXmlDocument.getElementsByTagName('title')[0].childNodes[0].nodeValue;
+
+            // Discovered (trial & error) that book_id 88, for example, has NO AUTHOR
+            const ifThereIsAnAuthor = myGroovyXmlDocument.getElementsByTagName('author');
+              console.log('ifThereIsAnAuthor typeof HTMLCollection[] array ? ', typeof ifThereIsAnAuthor);
+            /*
+            HTMLCollection[]
+             https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array
+             */
+              if(ifThereIsAnAuthor.length > 0) {
+                  that.myAuthor = myGroovyXmlDocument.getElementsByTagName('author')[0].childNodes[0].nodeValue;
+            }
+
+            // Agh. Book_ID 1257 has NO TITLE.
+              /*
+               http://www.librarything.com/work/1257 = "No title"  O la. Empty record. How (in the world) did I hit upon this one?
+               */
+            const ifThereIsATitle = myGroovyXmlDocument.getElementsByTagName('title');
+              if (ifThereIsATitle.length > 0) {
+                  that.myTitle = myGroovyXmlDocument.getElementsByTagName('title')[0].childNodes[0].nodeValue;
+              }
+
+            // Going on assumption these 2 fields are ALWAYS there. (Might be wrong.)
             that.myRating = myGroovyXmlDocument.getElementsByTagName('rating')[0].childNodes[0].nodeValue;
             that.myLtUrl = myGroovyXmlDocument.getElementsByTagName('url')[0].childNodes[0].nodeValue;
           }

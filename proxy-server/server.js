@@ -1,235 +1,116 @@
 require('dotenv').config()
-// `apikey=${process.env.LIBRARYTHING_WS_APIKEY}`  (e.g. 59211e ...)
+// apikey=`${process.env.LIBRARYTHING_WS_APIKEY}`  (e.g. 59211e ...)
+var thisEnvironmentIs = `${process.env.THIS_ENVIRONMENT_IS}`; // (e.g. LOCAL)
 
 var express = require('express');
 var path = require('path');
 var http    = require('http');
 
-// THIS FILE:
-// /Users/william.reilly/dev/VueJS/AXIOS-etc/server-proxy-my-simple-attempt/server.js
-
-/* A(NOTHER) NICE (EARLIER) EXAMPLE SERVER:
-$ pwd
-/Users/william.reilly/dev/VueJS/Udemy-vuejs-from-beginner-to-professional-Bo-Andersen/12-HTTP-vue-resource/start/backend/server.js
- */
-
-// console.log('wass is http? ', http) // << Yes, it's there. 
-// Q. But from where ? 
-// A. Must be baked into Node, n'est-ce pas?
-// A+.: https://nodejs.org/api/http.html#http_http  :o)
-
-// Express server
-var app = express(); /* express.createServer will not work here */
-
-// CORS in Express.js / Node.js
-// https://enable-cors.org/server_expressjs.html
-// Just learning: guess there's an "app.use(cors)" thing out there, simplifies things ... cheers.
-var cors = require('cors');
-/* Hmm. For me:
-
-(1) Did NOT Work: app.use(cors)
-My client app only got to OPTIONS (pending)
-Request URL:http://127.0.0.1:3000/myspecialproxy/asset/4040-PDF-ENG
-Provisional headers are shown
-Access-Control-Request-Headers:authorization
-Access-Control-Request-Method:GET
-
-(2) DID Work: (at least, got further) : OPTIONS 200; GET (pending)
- app.use(function(req, res, next){ ...
-Request URL:http://127.0.0.1:3000/myspecialproxy/asset/4040-PDF-ENG
-Provisional headers are shown
-Accept:application/json, text/plain, * / *
-Authorization:bearer eyJjdHkiOiJKV1QiLCJlbmMiOiJBMTI ...
-Origin:http://127.0.0.1:8000
-Referer:http://127.0.0.1:8000/
- */
-// (1) app.use(cors); // << Nope. See above.
-// (2) :
-app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	//	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization"); // ADDED Authorization << Yeah! That helped
-	// https://stackoverflow.com/questions/32500073/request-header-field-access-control-allow-headers-is-not-allowed-by-itself-in-pr
-	// https://fetch.spec.whatwg.org/#http-cors-protocol
-	// https://www.npmjs.com/package/cors
-	next();
-    });
+var app = express();
 
 
-/*   DIST subfolder for the CLIENT
-The Angular client app will go inside the overall parent directory for
-this Express proxy server app.
-
-
-
- */
-
-const client_dist_dir = path.join(__dirname, '..', '..', 'ng-client', 'dist');
-
-/*
-Am I kind of an idiot?
- */
 const client_dist_dir_done_right = path.join(__dirname, '..', 'ng-client', 'dist');
 
-const copied_here_client_dist_dir = path.join(__dirname, '.', 'dist');
-
-
-console.log('SERVER.JS client_dist_dir is ', client_dist_dir)
-console.log('SERVER.JS copied_here_client_dist_dir is ', copied_here_client_dist_dir)
-
-/* Looks to be okay:
- SERVER.JS client_dist_dir is  /Users/william.reilly/dev/JavaScript/CSCI-E31/Assignments/08-graduate-assignment-proxy-server/ng-client/dist
- */
-
-// '../../ng-client/dist'
 /* N.B.
 With new "combo" proxy + client Git repository,
 this path now goes UP and OUT of
 the Express /proxy-server directory,
 to get over and then down to the
 Angular Client /ng-client/dist directory.
-Q. Will that work ???
-A. Hmm.
-Video 13.8 at ~07:48 seems to say it should!
+Video 13.8 at ~07:48
  https://canvas.harvard.edu/courses/35096/pages/week-13-build-and-deploy?module_item_id=378294
  app.use('/', express.static('../client/dist'));
-Hmm.
-Hmm...
  */
-/*
- // DON'T WORK. (idiot!)
-app.use('/', express.static(client_dist_dir))
-*/
 
-// YES. Finally. sigh
 app.use('/', express.static(client_dist_dir_done_right))
-
-// DON'T WORK. (idiot!)
-// app.use('/', express.static('../../ng-client/dist'))
-
-// WORKS. But we are not going to do it this way.
-// app.use('/', express.static('./dist'))
-
-// WORKS! But we are not going to do it this way.
-// app.use('/', express.static(copied_here_client_dist_dir))
-
 
 var server = http.createServer(app);
 
-// HTTP time - we'll try AXIOS y not
+// HTTP - we'll use AXIOS here from our Proxy Server, to go to LibraryThing.com
 var axios = require('axios');
 
-console.log(' Listening on port :3000' );
+console.log(' Listening on port :3000 and This Enviroment Is: ', thisEnvironmentIs)
 server.listen(3000); // , '0.0.0.0');
 
-
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-// GET '/'
+//  LIBRARY THING WEB SERVICES API
+//  (1) BOOK_ID (2) API-KEY
+//  GET '/myspecialproxy/:book_id'
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-/* 20180429 - SEE THE CATCH-ALL '/*' AT BOTTOM OF FILE
-app.get('/', function (req, res) {
-	// DEPRECATED: 
-	// res.sendfile(__dirname + '/index.html');
-	   res.sendFile(__dirname + '/index.html');
-    });
-*/
+app.get('/myspecialproxy/:book_id', function (req, res) {
 
-// $$$$$$$ LIBRARY THING WS API (1) XML BOOK_ID (2) API-KEY "BAKED IN" $$$$$
-// GET '/myspecialproxy/:book_id'
-// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-// app.get('/myspecialproxy', function (req, res) {
-app.get('/myspecialproxy/:book_id', function (req, res) { // trying PASS a URL PARAM!   (e.g. 1528 = "The Red Badge of Courage")
-	// http://expressjs.com/en/api.html#req.params
-
-	// hoping to send cross-domain request to LibraryThing
-	// get back XML
-	// send that back to the requesting client who called this resource (my little Vue.js app)
-	// wish us luck (WUL)
-	/* 
+	/*
 http://www.librarything.com/services/rest/documentation/1.1/
 
-`http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=${process.env.LIBRARYTHING_WS_APIKEY}` << wreilly
+http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=${process.env.LIBRARYTHING_WS_APIKEY}
 
-Tim Spalding (public): d231aa37c9b4f5d304a60a3d0ad1dad4
+Tim Spalding (public APIKEY): d231aa37c9b4f5d304a60a3d0ad1dad4
 	 */
 
 	var book_id_here = req.params.book_id;
-	console.log('WR__ PARAM! book_id_here: ', book_id_here); // << YES. 1528
-	console.log('WR__ myspecialproxy req.headers: ', req.headers); // << yes
-	console.log('WR__ myspecialproxy res.outputSize: ', res.outputSize); // << yes. '0'
+	console.log('PARAM book_id_here: ', book_id_here); // << E.g., 1528
+    console.log('myspecialproxy req.headers: ', req.headers); // yes
+    // console.log('myspecialproxy res.headers: ', res.headers); // undefined
 
 	getData(book_id_here, function(err, data) {
 		if (err) {
 		    res.status(500).send(err);
 		} else {
-		    // Time to send the Good News back to the browser
-		    // (my little Vue.js app. whoa.
-		    //    res.json(data); 
-		    // Here because LT sends back XML, it IS a STRING. (But HBSP sends back JSON. OBJECT. Oy!)
-		    console.log('wow getData as callback, data.substring(0,250) is: ', data.substring(0,250)); 
-		    /* All nice and unescaped and everything:
+		    // Time to send the CORS data back to the browser
+		    // Here because LT sends back XML, it IS a STRING.
+		    console.log('getData as callback; data.substring(0,250) is: ', data.substring(0,250));
+		    /* 'data' here is correct, unescaped, ready to use:
   <?xml version="1.0" encoding="UTF-8"?>
-<response stat="ok"><ltml xmlns="http://www.librarything.com/" version="1.1"><item id="1060" type="work"><autho
+<response stat="ok"><ltml xmlns="http://www.librarything.com/" version="1.1"><item id="1060" type="work"><author...
 		     */
-			var answer = typeof(data);
-			console.log('well, the answer is: ', answer); // string
 
-			// http://expressjs.com/en/4x/api.html#res.send
+			/* ***************  (1) WORKED for AXIOS ************************ */
+            //  res.status(200).send(data); // << Working fine, sends as a whole object. All set.
 
-			/* FALSE ALARM:
-I *thought* we had an issue but we do not.
-- The "escaped" quote marks do NOT appear in the string that does make it to the Vue.js app. :o)
-- The "escaped" quotes WERE seen on the *rendered to HTML* version :o(
-- But, simply rendering response.data instead of response, and the escaping business GOES AWAY. :o)
+			/*  Special Note:
+			     I had used this server.js previously.
+			     The calling application used AXIOS.
 
-Nope>>>			// Seems ".send()" is making our string, which being XML has lots of quoted attributes in it, and those quotes are all getting escaped \"
-			// Hmm, can we send the whole string unescaped, in an object somehow?
-...
-			*/
-			/* *************** WORKED for AXIOS ************************ */
-            //  res.status(200).send(data); // << Working fine, sends whole object. All set.
+			:o)  With Axios, we got back the XML, but was wrapped in simple object { data: "<?xml..." }
+			Special Note: That "wrapping" is done by AXIOS and (I believe) the "xhrAdapter" - ./~/axios/lib/adapters/xhr.js
 
-			/*  :o)   We get XML, but wrapped in simple object { data: "<?xml..." }
-			Special Note: That "wrapping" is done by AXIOS and the "xhrAdapter" - ./~/axios/lib/adapters/xhr.js
-
-            Axios response! is this stuff XML?
                 {data: "<?xml version="1.0" encoding="UTF-8"?>↵<response s… API terms of service.</legal></ltml></response>↵", status: 200, statusText: "OK", headers: {…}, answer
 			*/
-			/* *************** /WORKED for AXIOS ************************ */
+			/* ***************  /WORKED for AXIOS ************************ */
 
-			/* **** DOES *NOT* WORK for ANGULAR HTTP **************** */
+
+			/* ********  (2) DOES *NOT* WORK for ANGULAR HTTP **************** */
             //  res.status(200).send(data); // << Not working, sends XML string, breaks on JSON parser.
-			/* :o(  We get XML:  "<?xml...>"
+
+			/* Special Note:
+			     But now shifting to Angular's HTTP, I hit an issue:
+			 */
+
+			/*  :o(  We get XML string directly:  "<?xml...>"
 
 			 LtWsApi err:  HttpErrorResponse {headers: HttpHeaders, status: 200, statusText: "OK", url: "http://0.0.0.0:3000/myspecialproxy/1528", ok: false, …}
 			 SyntaxError: Unexpected token < in JSON at position 0 at JSON.parse (<anonymous>) at XMLHttpRequest.onLoad
 			 */
+			/* ********  /DOES *NOT* WORK for ANGULAR HTTP **************** */
 
-			/* **** Time for FIX! Try my own "wrapping" right here in my Proxy Server: *** */
-			/* ************ WORKS for ANGULAR HTTP  ************** :o) */
+
+
+			/* ************  (3) WORKS for ANGULAR HTTP  ************** :o) */
+			/* **** Time for FIX! Do my own "wrapping" right here in my Proxy Server: *** */
 			const myWrappedDataObject = { myDataProperty: data }
-            res.status(200).send(myWrappedDataObject); // << Working fine, sends whole object. All set.
-
-
+            res.status(200).send(myWrappedDataObject); // << Working fine, now sends whole object. All set.
+			/* ************  /WORKS for ANGULAR HTTP  ************** :o) */
 		}
 	    });
     });
 
-// ==================
-function getData(book_id_passed, callback) {
-    // NEW! Try PARAM for which book: 1528 for The Red Badge of Courage
-    // only param is the callback
-    // otherwise, just hard-coded to get one book from LTWSAPI / XML
-    console.log('If you see me, we are in getData(). AND, book_id_passed is: ', book_id_passed)
-    
-	var whatIGot = 'dummystringfernow'
 
-	/* HERE (I think) we Go To LibraryThing
-	   - Server calling server means NO CORS DIFFICULTIES (I think)
-	   - Get XML back (No "JSONP" mismatch handling)
-	   - Going to "send" that XML (as String, I presume) back to calling client (my little Vue.js app)
-	   - Who knew.
-	 */
+/* ================== */
+function getData(book_id_passed, callback) {
+    console.log('getData() - book_id_passed is: ', book_id_passed)
+    
+	var whatIGot = '';
+
 
 	/* CORS ERROR:
 	    If you try to visit this address from BROWSER.
@@ -243,34 +124,31 @@ function getData(book_id_passed, callback) {
     ltWebServicesApiUrlStub = 'http://www.librarything.com/services/rest/1.1/';
     ltWebServicesMethodStub = '?method=librarything.ck.getwork&apikey=';
     ltWebServicesApiKey = `${process.env.LIBRARYTHING_WS_APIKEY}`; // for wreilly
-    ltWebServicesBookIdHardCoded = '1060'; // for Stephen Crane's "Red Badge of Courage"
 
-	/*
-	 ?method=librarything.ck.getwork&apikey=${process.env.LIBRARYTHING_WS_APIKEY}&id=1060';
-	 */
-
-	/* THIS URL is what the *http proxy server* guy does:  Not my little in-app "service" here.
-	 (`${this.ltWebServicesApiUrlStub}${this.ltWebServicesMethodStub}${this.ltWebServicesApiKey}&id=${book_id}`)
-	 */
-
-
-    // Hard-coded to '1060'
-	//	axios.get(`http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=${process.env.LIBRARYTHING_WS_APIKEY}`)
 	axios.get(`http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=${book_id_passed}&apikey=${process.env.LIBRARYTHING_WS_APIKEY}`)
 	.then(response => {
-		var localWhatIGot = response.data //
+        var localWhatIGotHeaders = response.headers //
+		console.log('localWhatIGotHeaders ', localWhatIGotHeaders)
+		/* Good. NO "CORS" HEADERS: (as expected)
+		 { server: 'nginx',
+		 date: 'Mon, 30 Apr 2018 10:57:20 GMT',
+		 'content-type': 'application/xml; charset=UTF-8',
+		 'transfer-encoding': 'chunked',
+		 connection: 'close',
+		 'set-cookie':
+		 [ 'cookie_from=deleted; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/',
+		 'LTAnonSessionID=4055040167; expires=Mon, 29-Apr-2019 10:57:19 GMT; path=/' ],
+		 'lt-backend': '192.168.0.35:80',
+		 'x-clacks-overhead': 'GNU Terry Pratchett' }
+		 */
+        var localWhatIGot = response.data //
 		var localWhatIGot250 = localWhatIGot.substring(0,250) //
-		//		console.log('Axios response.data.substring(0, 250)! is this stuff XML? ', response.data.substring(0,250));
+		//	console.log('Axios response.data. localWhatIGot.substring(0, 250) ', localWhatIGot.substring(0,250));
 
-		// ? subString breakin' stuff?
-		// Yah-hah! dope. it's not "subString()" - it is "substring()" Ye Gawds.
-		//		console.log('Axios response.data. localWhatIGot.substring(0, 250)! is this stuff XML? ', localWhatIGot.substring(0,250));
-
-		// yeah yeah		console.log('Axios response.data.  localWhatIGot250 is this stuff XML? ', localWhatIGot250);
-		callback(null, localWhatIGot) // null is, "We ain't got no stinkin' error"
+		callback(null, localWhatIGot) // null means, "No error"
 	    }).
 	catch(error => {
-		console.log('Ah CRAP. SERVER. getData() Did na work. error.code: ', error.code);
+		console.log('SERVER. getData() Did not work. error.code: ', error.code);
 	    })
 	
 

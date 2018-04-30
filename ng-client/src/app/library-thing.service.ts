@@ -7,17 +7,16 @@ import { environment } from '../environments/environment';
 @Injectable()
 export class LibraryThingService {
 /*
-Service to reach REST Services
-from LibraryThing.com (LT)
-for two purposes:
+Angular Service to use HTTP to reach 3rd party REST Services
+E.g. from LibraryThing.com (LT), where there are in fact two APIs:
 
-1) "LT Web Services API"
+1) "LT Web Services API"   << This IS Implemented Herein
    - No CORS support
    - JSONP can *not* be used...
    -- ...because it *returns XML*
    - Therefore requires Proxy Server
 
-2) "LT JavaScript API"
+2) "LT JavaScript API"    << NOT YET Implemented Herein
    - No CORS support
    - JSONP can be used
    -- (Therefore does *not* require proxy server)
@@ -56,57 +55,46 @@ SAMPLE URL:
  */
 
     apiUrlStubInService = environment.apiUrlStubInEnvironment;
-    // e.g. 'http://104.236.198.117:3000/'
+    // e.g. 'http://104.236.198.117:3000/', -OR- 'http://0.0.0.0:3000/'
 
     constructor(private _myHttpService: HttpClient) {  }
 
-/* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
-/* ^^^^^^   TOC   ^^^^^^^^^^^^^  */
-/*
+    /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
+    /* ^^^^^^   TOC   ^^^^^^^^^^^^^  */
+    /*
+    get100FakeAPI()  (just demonstration purpose)
 
-get100FakeAPI()  (just demonstration purpose)
+    getLibraryThingCK(book_id)
 
-getLibraryThingCK(book_id)
+    getLibraryThingMyBooks(user_id) << NOT YET Implemented Herein
+    */
+    /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
 
-getLibraryThingMyBooks(user_id)
-
-*/
 
   get100FakeAPI() {
-    // "100" is the default return for "get ALL" from this free, open, "fake" API.
+      /* FakeAPI.com
+      Just put here for comparison purpose. Simpler API call, no "CORS" issues.
+       */
+      // "100" is the default return for "get ALL" from this free, open, "fake" API.
 
-/* YER WRONG: No. Do not just "return" this asynchronous call like so: */
-// Yes we DO "just return" from here.
       return this._myHttpService.get('https://jsonplaceholder.typicode.com/posts');
 
-/* WRONG: Hmm.    Must handle with XXPromise!XX XXObservable!!XX */
-/* NO. Here, Angular HttpClient thing GENERATES an Observable.
-       In the calling app.component.ts, we SUBSCRIBE to that Observable.
-       Cheers.
-
-      this._myHttpService.get('https://jsonplaceholder.typicode.com/posts')
-          .subscribe(
-              (whatIGot) => {
-                  return whatIGot;
-              }
-          )
-*/
+        /* Note: Here, Angular HttpClient GENERATES an Observable.
+               In the calling app.component.ts, we SUBSCRIBE to that Observable.
+        */
   }
 
   getLibraryThingCK(book_id) {
       // "CK" = Common Knowledge, a LibraryThing.com feature.
     console.log('here we are in LT SERVICE & Etc. book_id is ', book_id);
       return this._myHttpService.get(`${this.apiUrlStubInService}myspecialproxy/${book_id}`);
-/* WORKS !
-      return this._myHttpService.get(`http://0.0.0.0:3000/myspecialproxy/${book_id}`);
-*/
 
       /* E.g., Proxy Server in turn sends to:
        http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=59211e...
        */
 
       /* CORS ERROR:
-       If you try to visit this address from BROWSER.
+       If you try to visit this address directly from a Client App in the  BROWSER.
        Needs PROXY SERVER instead.
 
        Failed to load http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&apikey=59211e...&id=1060:

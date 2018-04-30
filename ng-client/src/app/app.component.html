@@ -1,4 +1,4 @@
-<div class="row" style="background-color: cornflowerblue">
+<div class="row" style="background-color: #e4e5c0">
     <div class="column left">
         <div style="text-align:center">
             <h1>
@@ -47,7 +47,7 @@
   </li>
 </ol>
 </div>
-<div class="row" style="background-color: yellowgreen">
+<div class="row" style="background-color: #bdd8ba">
         <div class="column left">
             <h3>1. LibraryThing - Web Services API</h3>
         </div>
@@ -69,9 +69,9 @@
         <li>Uses my Angular app "LibraryThingService", for HTTP request first to the Proxy Server (hence from Proxy Server to LibraryThing).</li>
       </ul>
       <br />
-      <div  style="background-color: lightblue; padding: 8px;">
+      <div  style="background-color: #c8d3f4; padding: 15px;">
         <label for="bookId_id">LibraryThing Book ID # : </label>
-        <input type="text" ref-bookId id="bookId_id" name="bookId_name" on-keyup.enter="getLtWsApi(bookId)" placeholder="e.g. 1528" />
+        <input type="text" ref-bookId id="bookId_id" name="bookId_name" on-keydown.enter="getLtWsApi($event)" placeholder="e.g. 1528" />
         <br />
         <button type="submit" on-click="getLtWsApi(bookId)">Indicate Book ID# to Retrieve</button>
         <ul>
@@ -87,7 +87,7 @@
         <li>Rating: {{ myRating }}</li>
         <li>LibraryThing URL: <a href="{{myLtUrl}}" target="_blank">{{ myLtUrl }}</a></li>
       </ul>
-      <!--   <h5 *ngIf="{{ myCharacterNames }}">Character Names</h5> -->
+      <h5 *ngIf="myCharacterNames.length">Character Names</h5>
       <ol>
         <li *ngFor="let cName of myCharacterNames">{{ cName }}</li>
       </ol>
