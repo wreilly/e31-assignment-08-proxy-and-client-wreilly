@@ -8,8 +8,6 @@ import { WindowRefService } from './WindowRefService';
 // No need to specify which environment file (e.g. "prod")
 import { environment } from '../environments/environment';
 
-
-
 import { lilInspector } from '../utils/lilInspector';
 import { parse } from '../utils/parse';
 
@@ -21,8 +19,8 @@ import { parse } from '../utils/parse';
 })
 export class AppComponent {
   title = 'LibraryThing - Web Services API';
-  fakeApiStuff; // the [{},{}...] of lorem ipsum ....
-  ltWsApiStuff; // the XML data off of the web service return
+  fakeApiStuff; // the [{},{}...] of lorem ipsum from FakeAPI.com
+  ltWsApiStuff; // the XML data off of the web service return from LibraryThing
   myAuthor;
   myTitle;
   myRating;
@@ -31,20 +29,20 @@ export class AppComponent {
   apiUrlStubInApp = environment.apiUrlStubInEnvironment;
   // e.g. 'http://104.236.198.117:3000/'
 
-
   constructor(private _myLibraryThingService: LibraryThingService, private _myWindowRefService: WindowRefService) {  }
 
-  /* ******************************* */
-  /* *******  FAKEAPI ************** */
-  getFakeAPI(event) {
+    /* ******************************* */
+    /* *******  FAKEAPI ************** */
+    /* ******************************* */
+    getFakeAPI(event) {
     this._myLibraryThingService.get100FakeAPI()
     .subscribe(
        (response: any) => {
          console.log('Ng HTTP response is ', response);
          lilInspector(response[0], '');
-/* Input:
-[ 0: {userId: 1, id: 1, title: "sunt aut facere ..."}
-*/
+        /*
+          [ 0: {userId: 1, id: 1, title: "sunt aut facere ..."}
+        */
          this.fakeApiStuff = response;
           console.log('Ng HTTP this.fakeApiStuff is ', this.fakeApiStuff); // [{},{}...]
        },
@@ -59,34 +57,31 @@ export class AppComponent {
       this.fakeApiStuff = []; // reset
   }
 
-  /* ******************************* */
+  /* *************************************************** */
   /* ***** LIBRARYTHING - WEB SERVICES (XML) API ******* */
-  /* ******************************* */
+  /* *************************************************** */
   getLtWsApi(inputElementRefPassedIn) {
-    console.log('*** LtWsApi inputElementRefPassedIn ', inputElementRefPassedIn);
-    // const book_id_hardcoded = '1528'; // Red Badge of Courage
-    // const book_id: string = inputElementRefPassedIn.value;
+    // console.log('*** LtWsApi inputElementRefPassedIn ', inputElementRefPassedIn);
 
     let book_id = '';
 
-    /*
-    The Enter Key sends Keyboard Event, which has what we want in: $event.target.value
-    The Submit Button sends InputElement, which has what we want in: .value
+    /* Two triggers to this method:
+      The Enter Key sends Keyboard Event,   which has what we want in:  $event.target.value
+      The Submit Button sends InputElement, which has what we want in:  .value
      */
-    // Useless. Both are simply 'object'
-//      console.log('typeof inputElementRefPassedIn: ', typeof inputElementRefPassedIn);
 
-    if(inputElementRefPassedIn.target) {
-        console.log('inputElementRefPassedIn.target: ', inputElementRefPassedIn.target);
-        console.log('inputElementRefPassedIn.target.value: ', inputElementRefPassedIn.target.value);
+      // If user makes no entry to input box),
+      // we'll run default book 1528 (Red Badge of Courage)
+
+      if(inputElementRefPassedIn.target) {
+        // This was the Enter Key...
+        // console.log('inputElementRefPassedIn.target: ', inputElementRefPassedIn.target);
+        // console.log('inputElementRefPassedIn.target.value: ', inputElementRefPassedIn.target.value);
         inputElementRefPassedIn.target.value ? book_id = inputElementRefPassedIn.target.value : book_id = '1528';
     } else {
-        // If user just clicks Submit (no entry to input box),
-        // we'll run default book 1528 (Red Badge of Courage)
+        // Else this was the Submit Button...
         inputElementRefPassedIn.value ? book_id = inputElementRefPassedIn.value : book_id = '1528';
     }
-
-
 
     // Reset display of data
     this.myAuthor = '';
@@ -95,52 +90,40 @@ export class AppComponent {
     this.myLtUrl = '';
     this.myCharacterNames = [];
 
-
-    this._myLibraryThingService.getLibraryThingCK(book_id) // (book_id) // (book_id_hardcoded)
+    this._myLibraryThingService.getLibraryThingCK(book_id)
       .subscribe(
         (whatIGot: any) => {
 
           /*
-          Special Note
-          For use with Angular's HTTP
-          (as opposed to with Axios, before),
+          Special Note about the Proxy Server:
+
+          For use now with Angular's HTTP
+          (as opposed to my previous use of Axios with this Proxy Server),
           I doctored the proxy server.
           Here is what it is sending us:
 
-           // Time to try my own "wrapping" right here in my Proxy Server:
+           // I did my own "wrapping" of the data object, over in my Proxy Server:
            const myWrappedDataObject = { myDataProperty: data }
            res.status(200).send(myWrappedDataObject); // << Working fine, sends whole object. All set.
+          */
 
-           We may need to use whatIGot.myDataProperty to get at the XML string.
-           We'll see.
-           */
+          this.ltWsApiStuff = whatIGot.myDataProperty; // the XML string
 
-      //    console.log('here we are & Etc. whatIGot.myDataProperty ', whatIGot.myDataProperty);
-            /* STILL COMPLAINING. W-a-a-a-a-h.
-"ERROR in src/app/app.component.ts(87,40): error TS2339: Property 'myDataProperty' does not exist on type 'Object'."
-             */
-          this.ltWsApiStuff = whatIGot.myDataProperty;
-
-// https://stackoverflow.com/questions/649614/xml-parsing-of-a-variable-string-in-javascript
-          /* TODO Consider this alternative:
-           https://naturalintelligence.github.io/fast-xml-parser/
+          /* ********* XML STRING PARSE TO XML DOCUMENT ************* */
+          // https://stackoverflow.com/questions/649614/xml-parsing-of-a-variable-string-in-javascript
+          /* TODO (Later) Consider this alternative:
+             https://naturalintelligence.github.io/fast-xml-parser/
            */
           function myParseXml(xmlStr, thingAsThis) {
             const that = thingAsThis;
 
-/* TypeScript complained about ".DOMParser" not a property on window.
-See // https://juristr.com/blog/2016/09/ng2-get-window-ref/
-              return new window.DOMParser() // << No.
-*/
-              return new that._myWindowRefService.myNativeWindowGetter.DOMParser().parseFromString(xmlStr, 'text/xml');
+            /* TypeScript complained about ".DOMParser" not a property on window.
+               See // https://juristr.com/blog/2016/09/ng2-get-window-ref/
+            */
+            return new that._myWindowRefService.myNativeWindowGetter.DOMParser().parseFromString(xmlStr, 'text/xml');
           }
-/* COMPLAINED about '.myDataProperty'
-"src/app/app.component.ts(95,59): error TS2339: Property 'myDataProperty' does not exist on type 'Object'"
 
-            const myGroovyXmlDocument = myParseXml(whatIGot.myDataProperty);
-*/
-            const myGroovyXmlDocument = myParseXml(this.ltWsApiStuff, this);
-   //       console.log('myGroovyXmlDocument ', myGroovyXmlDocument);
+          const myGroovyXmlDocument = myParseXml(this.ltWsApiStuff, this);
           /* The XML (partial):
            <?xml version="1.0" encoding="UTF-8"?>
            <response stat="ok">
@@ -149,33 +132,30 @@ See // https://juristr.com/blog/2016/09/ng2-get-window-ref/
                     <author id="720" authorcode="cranestephen">Stephen Crane</author>
                     <title>The Red Badge of Courage</title>
                     <rating>6.8</rating>
-            <url>http://www.librarything.com/work/1528</url> ...
+                    <url>http://www.librarything.com/work/1528</url> ...
            */
 
-           /* **** JAVASCRIPT to PARSE XML to OBJECT
-
-https://andrew.stwrt.ca/posts/js-xml-parsing/
-Has dependency on lodash. (I did npm install lodash...)
-(initially tried using CDN; dropped that)
-https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js
---------------------------------------
-parse.js --> parse.ts
+           /* **** JAVASCRIPT to PARSE XML to OBJECT ************* */
+            /*
+               https://andrew.stwrt.ca/posts/js-xml-parsing/
+               Has dependency on lodash. (I did npm install lodash...)
+               --------------------------------------
+               parse.js --> parse.ts
            */
           const myParsedGroovyXmlDocument =   parse(myGroovyXmlDocument);
           lilInspector(myParsedGroovyXmlDocument, '');
           console.log('myParsedGroovyXmlDocument ', myParsedGroovyXmlDocument);
 
-// https://stackoverflow.com/questions/17604071/parse-xml-using-javascript
-// https://gist.github.com/jashmenn/b306add36d3e6f0f6483 Javascript var self = this; vs. .bind
+          // https://stackoverflow.com/questions/17604071/parse-xml-using-javascript
 
-/* Some Hard-Coded Values (for Testing)
-re: CharacterNames
-- Because the LibraryThing entry records for books will vary (a great deal),
--- I cannot place one "blanket" object "dot location" path-like thing
---- to obtain this "List of Character Names" from all searches...
-- So, I simply hard-coded two examples (I manually discovered the exact object location for each)
-- And made provision for default, as well as for empty search box
-*/
+            /* Some Hard-Coded Values (for Testing)
+               re: ***List of CharacterNames***
+            - Because the LibraryThing XML records for books will vary (a great deal),
+            -- I cannot place one single "blanket" object "dot location" path-like thing
+            --- to obtain this "List of Character Names" from all searches...
+            - So, I simply hard-coded two examples (I manually discovered the exact object location for each)
+            - And made provision for default, as well as for empty search box
+            */
           switch (book_id) {
             case '1528': // The Red Badge of Courage
               this.myCharacterNames = myParsedGroovyXmlDocument.ltml.item.commonknowledge[9].versionList.factList;
@@ -197,14 +177,15 @@ re: CharacterNames
           }
 
           function getCommonFour(thingAsThis) {
-            const that = thingAsThis; // "this equals that"
+              // https://gist.github.com/jashmenn/b306add36d3e6f0f6483 Javascript var self = this; vs. .bind
+              const that = thingAsThis; // "this equals that"
 
             // Discovered (trial & error) that book_id 88, for example, has NO AUTHOR
             const ifThereIsAnAuthor = myGroovyXmlDocument.getElementsByTagName('author');
-              console.log('ifThereIsAnAuthor typeof HTMLCollection[] array ? ', typeof ifThereIsAnAuthor);
+            // console.log('ifThereIsAnAuthor typeof HTMLCollection[] array ? ', typeof ifThereIsAnAuthor);
             /*
-            HTMLCollection[]
-             https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array
+              HTMLCollection[]
+              https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array
              */
               if(ifThereIsAnAuthor.length > 0) {
                   that.myAuthor = myGroovyXmlDocument.getElementsByTagName('author')[0].childNodes[0].nodeValue;

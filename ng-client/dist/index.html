@@ -4,12 +4,6 @@
   <meta charset="utf-8">
   <title>AssignmentGraduateNoCorsProxyServerWreilly</title>
   <base href="/">
-  <!-- Lodash a dependency for this XML parse.js
-  https://andrew.stwrt.ca/posts/js-xml-parsing/
-  -->
-<!-- No longer used. We now have done npm install lodash
-  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
--->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
@@ -18,7 +12,6 @@
 
 
 <!--
-
 Notes: 2018-04-26 Thursday session w. Artie
 
 Code for the app.js in the Express app.
@@ -62,10 +55,7 @@ app.use('/api', apiRouter)
 app.use('/*', (req, res, next) => {
   res.sendFile('index.html', {root: client_dist_dir})
 })
-
-
 -->
-
 
 <script type="text/javascript" src="inline.bundle.js"></script><script type="text/javascript" src="polyfills.bundle.js"></script><script type="text/javascript" src="styles.bundle.js"></script><script type="text/javascript" src="vendor.bundle.js"></script><script type="text/javascript" src="main.bundle.js"></script></body>
 </html>

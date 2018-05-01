@@ -18,7 +18,7 @@ https://medium.com/@armno/til-importing-lodash-into-angular-the-better-way-aacbe
  # This is the new bit here:
  $ npm install --save @types/lodash
  */
-import * as _ from 'lodash'; // '../../node_modules/lodash'; // << Did not work
+import * as _ from 'lodash';
 
 
 // flattens an object (recursively!), similarly to Array#flatten

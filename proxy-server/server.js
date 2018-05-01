@@ -8,7 +8,6 @@ var http    = require('http');
 
 var app = express();
 
-
 const client_dist_dir_done_right = path.join(__dirname, '..', 'ng-client', 'dist');
 
 /* N.B.
@@ -26,11 +25,11 @@ app.use('/', express.static(client_dist_dir_done_right))
 
 var server = http.createServer(app);
 
-// HTTP - we'll use AXIOS here from our Proxy Server, to go to LibraryThing.com
+// For "HTTP" - we'll use AXIOS here in our Proxy Server, to make the request to go to LibraryThing.com
 var axios = require('axios');
 
 console.log(' Listening on port :3000 and This Enviroment Is: ', thisEnvironmentIs)
-server.listen(3000); // , '0.0.0.0');
+server.listen(3000);
 
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 //  LIBRARY THING WEB SERVICES API
@@ -40,24 +39,23 @@ server.listen(3000); // , '0.0.0.0');
 app.get('/myspecialproxy/:book_id', function (req, res) {
 
 	/*
-http://www.librarything.com/services/rest/documentation/1.1/
+      http://www.librarything.com/services/rest/documentation/1.1/
 
-http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=${process.env.LIBRARYTHING_WS_APIKEY}
+      http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=${process.env.LIBRARYTHING_WS_APIKEY}
 
-Tim Spalding (public APIKEY): d231aa37c9b4f5d304a60a3d0ad1dad4
+      Tim Spalding (public APIKEY): d231aa37c9b4f5d304a60a3d0ad1dad4
 	 */
 
 	var book_id_here = req.params.book_id;
 	console.log('PARAM book_id_here: ', book_id_here); // << E.g., 1528
-    console.log('myspecialproxy req.headers: ', req.headers); // yes
-    // console.log('myspecialproxy res.headers: ', res.headers); // undefined
+    console.log('myspecialproxy req.headers: ', req.headers);
 
 	getData(book_id_here, function(err, data) {
 		if (err) {
 		    res.status(500).send(err);
 		} else {
 		    // Time to send the CORS data back to the browser
-		    // Here because LT sends back XML, it IS a STRING.
+		    // Because LT sends back XML, it IS a STRING.
 		    console.log('getData as callback; data.substring(0,250) is: ', data.substring(0,250));
 		    /* 'data' here is correct, unescaped, ready to use:
   <?xml version="1.0" encoding="UTF-8"?>
@@ -69,7 +67,7 @@ Tim Spalding (public APIKEY): d231aa37c9b4f5d304a60a3d0ad1dad4
 
 			/*  Special Note:
 			     I had used this server.js previously.
-			     The calling application used AXIOS.
+			     >> The calling application used AXIOS. <<
 
 			:o)  With Axios, we got back the XML, but was wrapped in simple object { data: "<?xml..." }
 			Special Note: That "wrapping" is done by AXIOS and (I believe) the "xhrAdapter" - ./~/axios/lib/adapters/xhr.js
@@ -83,7 +81,7 @@ Tim Spalding (public APIKEY): d231aa37c9b4f5d304a60a3d0ad1dad4
             //  res.status(200).send(data); // << Not working, sends XML string, breaks on JSON parser.
 
 			/* Special Note:
-			     But now shifting to Angular's HTTP, I hit an issue:
+			     But now shifting to >> Angular's HTTP << for the calling application, I hit an issue:
 			 */
 
 			/*  :o(  We get XML string directly:  "<?xml...>"
@@ -113,13 +111,12 @@ function getData(book_id_passed, callback) {
 
 
 	/* CORS ERROR:
-	    If you try to visit this address from BROWSER.
+	    If you try to visit this "Cross Origin" address from web app using BROWSER.
 	    Needs PROXY SERVER instead.
 
-	 Failed to load http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&apikey=${process.env.LIBRARYTHING_WS_APIKEY}&id=1060:
- 	 No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://0.0.0.0:4200' is therefore not allowed access.
+	 "Failed to load http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&apikey=${process.env.LIBRARYTHING_WS_APIKEY}&id=1060:"
+ 	 "No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://0.0.0.0:4200' is therefore not allowed access."
 	 */
-
 
     ltWebServicesApiUrlStub = 'http://www.librarything.com/services/rest/1.1/';
     ltWebServicesMethodStub = '?method=librarything.ck.getwork&apikey=';
@@ -129,7 +126,7 @@ function getData(book_id_passed, callback) {
 	.then(response => {
         var localWhatIGotHeaders = response.headers //
 		console.log('localWhatIGotHeaders ', localWhatIGotHeaders)
-		/* Good. NO "CORS" HEADERS: (as expected)
+		/* Good. NO "CORS" HEADERS from LibraryThing: (Just as we expected)
 		 { server: 'nginx',
 		 date: 'Mon, 30 Apr 2018 10:57:20 GMT',
 		 'content-type': 'application/xml; charset=UTF-8',
@@ -150,26 +147,16 @@ function getData(book_id_passed, callback) {
 	catch(error => {
 		console.log('SERVER. getData() Did not work. error.code: ', error.code);
 	    })
-	
-
-	    // Hmm. Not from here... Move it above. ^^     callback(null, whatIGot) // null is, "We ain't got no stinkin' error"
 }
 
 /*
-Catch-All: If user hits refresh page, the Angular SPA will not be first recipient of that new request.
-The Express app will be. For any request the Express app does not have a route for, it will simply
+Catch-All:
+- If user hits browser button to refresh page, the Angular SPA will not be first recipient of that new request.
+The Express app will be.
+- For any request the Express app does not have a route for, it will simply
 use this catch-all, and redirect to the Angular index.html page.
-Recall, the Express (proxy server) app only has one route, for the GET :3000/myspecialproxy/:book_id
-Anything else will fall to this Catch-All:
----------
-app.js in Express
----------
-It worked. :o)   http://0.0.0.0:4200/foobar  came back to Angular SPA page
-Spoke too soon.
-Try: http://0.0.0.0:3000/foobar
-And you (quite properly) get:
-"Error: ENOENT: no such file or directory, stat '/Users/william.reilly/dev/JavaScript/CSCI-E31/Assignments/08-graduate-assignment-proxy-server/e31-assignment-08-express-proxy-server-no-cors-wreilly/client/dist/index.html'"
-Good!
+- Recall, the Express (proxy server) app only has one route, for the WS API GET :3000/myspecialproxy/:book_id
+- Anything else will fall to this Catch-All:
 */
 app.use('/*', (req, res, next) => {
     res.sendFile('index.html', {root: client_dist_dir_done_right})

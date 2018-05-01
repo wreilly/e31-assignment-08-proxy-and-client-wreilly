@@ -16,7 +16,7 @@ E.g. from LibraryThing.com (LT), where there are in fact two APIs:
    -- ...because it *returns XML*
    - Therefore requires Proxy Server
 
-2) "LT JavaScript API"    << NOT YET Implemented Herein
+2) "LT JavaScript API"    << **NOT** Implemented Herein
    - No CORS support
    - JSONP can be used
    -- (Therefore does *not* require proxy server)
@@ -66,7 +66,7 @@ SAMPLE URL:
 
     getLibraryThingCK(book_id)
 
-    getLibraryThingMyBooks(user_id) << NOT YET Implemented Herein
+    getLibraryThingMyBooks(user_id) << **NOT** Implemented Herein
     */
     /* ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */
 
@@ -86,22 +86,20 @@ SAMPLE URL:
 
   getLibraryThingCK(book_id) {
       // "CK" = Common Knowledge, a LibraryThing.com feature.
-    console.log('here we are in LT SERVICE & Etc. book_id is ', book_id);
       return this._myHttpService.get(`${this.apiUrlStubInService}myspecialproxy/${book_id}`);
 
       /* E.g., Proxy Server in turn sends to:
-       http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=59211e...
+         http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&id=1060&apikey=59211e...
        */
 
       /* CORS ERROR:
        If you try to visit this address directly from a Client App in the  BROWSER.
        Needs PROXY SERVER instead.
 
-       Failed to load http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&apikey=59211e...&id=1060:
-       No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://0.0.0.0:4200' is therefore not allowed access.
+        "Failed to load http://www.librarything.com/services/rest/1.1/?method=librarything.ck.getwork&apikey=59211e...&id=1060:"
+        "No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'http://0.0.0.0:4200' is therefore not allowed access."
        */
 
   }
-
 
 } // /LibraryThingService
