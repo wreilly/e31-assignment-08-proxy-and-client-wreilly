@@ -159,5 +159,7 @@ use this catch-all, and redirect to the Angular index.html page.
 - Anything else will fall to this Catch-All:
 */
 app.use('/*', (req, res, next) => {
+	console.log('CATCH-ALL  "/*" req.headers.host: ', req.headers.host);
+	// ^^^^^ Yes:  CATCH-ALL  "/*" req.headers.host:  0.0.0.0:3000
     res.sendFile('index.html', {root: client_dist_dir_done_right})
 })
